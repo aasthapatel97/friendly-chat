@@ -1,0 +1,543 @@
+<!doctype html>
+<!--
+  Copyright 2015 Google Inc. All rights reserved.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+      https://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Learn how to use the Firebase platform on the Web">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friendly Chat</title>
+
+  <!-- Disable tap highlight on IE -->
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Friendly Chat">
+  <meta name="theme-color" content="#303F9F">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Friendly Chat">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
+
+  <!-- Tile icon for Win8 -->
+  <meta name="msapplication-TileColor" content="#3372DF">
+  <meta name="msapplication-navbutton-color" content="#303F9F">
+
+  <!-- Material Design Lite -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+  <!-- App Styling -->
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+  <link rel="stylesheet" href="styles/main.css">
+  
+
+  <!-- TODO: Enable First Input Delay polyfill library. -->
+  <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script>
+
+  <!--  <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script> -->
+
+</head>
+<body>
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+  <!-- Header section containing logo -->
+  <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+        <h3><i class="material-icons">chat_bubble_outline</i> Learn Together</h3>
+      </div>
+      <div id="user-container">
+        <div hidden id="user-pic"></div>
+        <div hidden id="user-name"></div>
+        <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          Sign-out
+        </button>
+        <button id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          <i class="material-icons">account_circle</i>Sign-in with Google
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mdl-layout__content mdl-color--grey-100">
+    <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
+
+      
+      
+      <!-- Scripts and Hints-->
+      <div id="script-hints" class="mdl-cell mdl-cell--6-col">
+        <h5>Scripts &amp; Hints</h5>
+        <!-- select roles: tutor or tutee -->
+        <div id="select-role">
+          <p>First select your role as:
+            <select name="role"><option value="tutor">Tutor</option>
+              <option value="tutee">Tutee</option>
+            </select>
+          </p>
+        </div>
+
+        <!-- tutor view -->
+        <div id="tutor" >
+          <p>
+            <b>Question:</b> Phineas borrows $250 from Candance in January. Candace sets a compound interest rate of 20% (0.2). Phineas pays Candace back 2 months later. How much money did Phineas pay Candace? </p>
+            <p>
+            <b>Tutee Concern:</b> <i>I need help with something else.</i>
+          </p> 
+          <p><i> <b>Click</b> to access Tutee's Response History </i></p>
+    
+        
+          
+
+          <!--Hint Category-->
+
+          <h5>Hint Categories</h5>
+          <div class="warpper">
+            <input class="label" id="one" name="group" type="radio" checked hidden>
+            <input class="label" id="two" name="group" type="radio" hidden>
+            <input class="label" id="three" name="group" type="radio" hidden>
+            <div class="tabs">
+            <label class="tab" id="one-tab" for="one">Make Connections</label>
+            <label class="tab" id="two-tab" for="two">Strategize</label>
+            <label class="tab" id="three-tab" for="three">Motivate</label>
+              </div>
+            <div class="panels">
+            <div class="panel" id="one-panel">
+              
+              <p></p>
+              <p>Hint 1 (Add copy to clipboard here)</p>
+
+              <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'> 
+
+              <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+              
+                    
+              
+              
+              <p id="p1">Hint 1</p> <button onclick="copyToClipboard('#p1')">Copy Hint 1</button>
+              <p id="p2">Hint 2</p><br/> <button onclick="copyToClipboard('#p2')">Copy Hint 2</button>
+              
+              
+            </div>
+            <div class="panel" id="two-panel">
+              <div class="panel-title">Add Title</div>
+              <p>Add content</p>
+            </div>
+            <div class="panel" id="three-panel">
+              <div class="panel-title">Add content</div>
+              <p>Add content</p>
+            </div>
+            </div>
+          </div>
+          
+          
+          <!-- case study -->
+          <div class="div">
+            <h6>Provide Case Studies:</h6>
+            <p>
+              <img class="hint-icon" src="images/hint.png" width="20" height="20" onclick="display_hint()">
+              <!-- <p class = "paragraph"> -->
+              <span class="paragraph"><input name="myCheckBox" id="myCheckBox" type="checkbox">
+                <b>Step 1: </b>
+                You could first simplify the question and give step-by-step instructions to show the details. <br>
+                To simplify the question, you can set the simple interest rate and compound interest rate to <font color="#c85c32"><b>the same value</b></font>, and you can change the value of interest rate to an <font color="#c85c32"><b>integer</b></font>.
+              </span>
+              <!-- hint1 -->
+              <font color="#990000">
+                </font></p><p class="hint" id="hint1"><font color="#990000">
+                  You could use this example: Your brother Sammi and your sister Sarah are investing money in the bank together. Sarah invests $500 at 10% simple interest for 5 years, and Sammi invests $500 at 10% compound interest for 5 years. Who will receive more money?
+                </font></p><font color="#990000">
+              </font>
+            <p></p>
+
+            <p class="paragraph">
+              <input name="myCheckBox" id="myCheckBox" type="checkbox">
+              <b>Step 2: </b>
+              You’d better ask tutee how to solve this problem first. Make sure the tutee explains his/her thoughts in detail.
+            </p>
+            <p class="paragraph">
+              <input name="myCheckBox" id="myCheckBox" type="checkbox">
+              <b>Step 3: </b>
+              Check tutee’s answer. For those steps your tutee missed, you could provide more explanation. For those steps your tutee got it correct, you could <b>ask your tutee to <font color="#c85c32">explain his/her thoughts</font> to you</b>.
+              <br>
+              Below are the step for the questions. <b>Check the box that your tutee got it correct:</b>
+              <br>
+              <span><input name="Step" id="myCheckBox" type="checkbox"></span>
+              <label for="myCheckBox">Differentiate simple interest's and compound interest's formulas
+                <br>
+                <span><input name="Step" id="myCheckBox" type="checkbox"></span>
+                <label for="myCheckBox">Calculate simple interest with formula
+                  <br>
+                  <span><input name="Step" id="myCheckBox" type="checkbox"></span>
+                  <label for="myCheckBox">Calculate compound interest with formula
+                    <br>
+                    <span><input name="Step" id="myCheckBox" type="checkbox"></span>
+                    <label for="myCheckBox">Compare the value
+
+                    </label></label></label></label></p>
+                  </div>
+                  <div class="div">
+                    <!-- instruction for case study -->
+                    <h6 id="sbs">Step-by-Step Instructions for Case Studies:</h6>
+                    <div class="div">
+                      <p>
+                        <img class="hint-icon" src="images/hint.png" width="20" height="20" onclick="display_hint2()">
+                        <!-- <p class = "paragraph"> -->
+                        <span class="paragraph"><input name="data_up" id="data_up" type="checkbox">
+                          <b>Step 1: </b>
+                          Ask your tutee what is the <font color="#c85c32"><b>difference</b></font> between simple interest and compound interest in terms of <font color="#c85c32"><b>definition</b></font> and <font color="#c85c32"><b>formula</b></font>.
+
+                        </span>
+                        <!-- contextual hints -->
+                        <font color="#990000">
+                          </font></p><p id="ch1" class="paragraph"><font color="#990000">
+                            Your tutee answered this step correct, ask him to explain to you.
+                          </font></p><font color="#990000">
+                        </font>
+                        <!-- hint2 -->
+                        <font color="#990000">
+                          <p class="hint" id="hint2" hidden="">
+                            You could simplify the task by separating the definitions between simple interest and compound interest. For example, you could say, calculating the simple interest needs three parameters, which are principal, simple interest rates and time, ask your tutee to explain the terms in his/her own words.
+                          </p>
+                        </font>
+                      <p></p>
+                    </div>
+                    <div class="div">
+                      <p>
+                        <img class="hint-icon" src="images/hint.png" width="20" height="20" onclick="display_hint3()">
+                        <!-- <p class = "paragraph"> -->
+                        <span class="paragraph">
+                          <input name="data_up" id="data_up" type="checkbox">
+                          <b>Step 2: </b>
+                          Ask your tutee to calculate how much money earned with simple interest using the simple interest formula.
+                          <!-- contextual hints -->
+                        </span>
+                        <font color="#990000">
+                          </font></p><p id="ch2" class="paragraph"><font color="#990000">
+                            Your tutee answered this step correct, ask him to explain to you.
+                          </font></p><font color="#990000">
+                        </font>
+                        <!-- display hints -->
+                        <font color="#990000">
+                          <p class="hint" id="hint3" hidden="">
+                            Check whether the tutee comprehends the variables in the formula and whether he/she can apply the formula in Sarah’s example
+                          </p>
+                          <p class="hint" id="optional_hint" hidden="">
+                            You’d better provide more examples during the calculation process to help the tutee gain a better understanding. For example, you could demonstrate to the tutee how to put the variables into the formula and use correct operators to calculate the values.
+                          </p>
+                        </font>
+                      <p></p>
+                    </div>
+                    <div class="div">
+                      <p class="paragraph">
+
+
+                        <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                        <b>Step 3: </b>
+                        You could provide an extra resource:<br>
+                        Here is an extra case study to get you and Tutee become familiar with the definition of simple interes:
+                        <a href="https://demilii.github.io/TOL_project1/index.html">https://demilii.github.io/TOL_project1/index.html</a>
+                        <br>
+                        A graph of how simple interest works might help:
+                        <a href="https://demilii.github.io/TOL_project1/simple%20interest.html">https://demilii.github.io/TOL_project1/simple%20interest.html</a>
+                      </p>
+                    </div>
+                    <!-- step 4 -->
+                    <div class="div">
+                      <p>
+                        <img class="hint-icon" src="images/hint.png" width="20" height="20" onclick="display_hint4()">
+                        <!-- <p class = "paragraph"> -->
+                        <span class="paragraph">
+                          <input name="data_up" id="data_up" type="checkbox">
+                          <b>Step 4: </b>
+                          Ask your tutee to calculate how much money earned with compound interest using the compound interest formula.
+                        </span>
+                        <!-- contextual hints -->
+                        <font color="#990000">
+                          </font></p><p id="ch3" class="paragraph"><font color="#990000">
+                            Your tutee answered this step correct, ask him to explain to you.
+                          </font></p><font color="#990000">
+                        </font>
+                        <!-- display hints -->
+                        <font color="#990000">
+                          <p class="hint" id="hint4" hidden="">
+                            Help your tutee to comprehend the formula of compound interest variables just as how you did in simple interest. Then you could encourage the tutee to calculate the value of compound interest imitating how you guys did in calculating the simple interest.
+                          </p>
+                          <p class="hint" id="optional_hint2" hidden="">
+                            Just as what you did in the simple interest. Give further clarification.
+                          </p>
+                        </font>
+
+                      <p></p>
+                    </div>
+                    <div class="div">
+                      <p class="paragraph">
+                        <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                        <b>Step 5: </b>
+                        You could provide an extra resource: <br>
+                        Here is an extra case study to get you and Tutee become familiar with the definition of compound interest.
+                        <a href="https://demilii.github.io/TOL_project1/page3.html ">https://demilii.github.io/TOL_project1/page3.html</a>
+                        <br>
+                        A graph of how compound interest works might help.
+                        <a href="https://demilii.github.io/TOL_project1/compound%20interest.html">https://demilii.github.io/TOL_project1/compound%20interest.html</a>
+                      </p>
+                    </div>
+                    <div class="div">
+                      <p class="paragraph">
+                        <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                        <b>Step 6: </b>
+                        Make <b>comparisons</b> between simple interest and compound interest
+                        <!-- contextual hints -->
+                        <font color="#990000">
+                          </font></p><p id="ch4" class="paragraph"><font color="#990000">
+                            Your tutee answered this step correct, ask him to explain to you.
+                          </font></p><font color="#990000">
+                        </font>
+                      <p></p>
+                      <!-- step7 -->
+                      <div class="div">
+
+                        <p class="paragraph">
+                          <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                          <b>Step 7: </b>
+                          You could provide an extra resource: <br>
+                          An interactive graph is helpful if it’s hard to use verbal language to explain.
+                          <a href="https://demilii.github.io/TOL_project1/Comparison.html">https://demilii.github.io/TOL_project1/Comparison.html</a>
+                          <br>
+                        </p>
+                      </div>
+
+                      <p class="paragraph">
+                        <b><font color="#F78243">Above step in this section help your tutee understand how to solve this case study.
+                          In order to help him solve his questions(the assignment) and understand better, you should continue do the following steps.
+                        </font></b>
+                      </p>
+                    </div>
+
+                    <!-- Step8 -->
+                    <div class="div">
+                      <p>
+                        <img class="hint-icon" src="images/hint.png" width="20" height="20" onclick="display_hint5()">
+                        <!-- <p class = "paragraph"> -->
+                        <span class="paragraph">
+                          <input name="data_up" id="data_up" type="checkbox">
+                          <b>Step 8: </b>
+                          Encourage the tutee to <font color="#c85c32"><b>conclude/reflect</b></font> on how to solve this kind of problem.
+                          <!-- display hints -->
+                          <font color="#990000">
+                            </font></span></p><p class="hint" id="hint5" hidden=""><font color="#990000">
+                              Ask the tutee to go through the calculation process again and conclude the methods you used. Ask him to reflect on the process.            </font></p><font color="#990000">
+                            </font>
+                          <p></p>
+                        </div>
+
+                        <div class="div">
+                          <!-- instruction for assignment -->
+                          <h6>Insturction on the Assignment:</h6>
+                          <div class="div">
+                            <p>
+                              <img class="hint-icon" src="images/hint.png" width="20" height="20" onclick="display_hint6()">
+                              <!-- <p class = "paragraph"> -->
+                              <span class="paragraph">
+                                <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                                <b>Step 1: </b>
+                                Back to the tutee’s question, you could encourage the tutee to try to <b>solve the question again by him/herself </b>.
+                              </span>
+                              <!-- display hints -->
+                              <font color="#990000">
+                                </font></p><p class="hint" id="hint6" hidden=""><font color="#990000">
+                                  Now ask the Tutee to use the methods he concluded for the previous case study and apply the skills for his own question.
+                                </font></p><font color="#990000">
+                              </font>
+                            <p></p>
+                          </div>
+                          <div class="div">
+                            <p class="paragraph">
+                              <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                              <b>Step 2: </b>
+                              Check tutee’s answer, <b>repeat</b> the above steps to help your tutee if he/she gets some of the parts incorrect.
+                            </p>
+                          </div>
+                          <div class="div">
+                            <p>
+                              <img class="hint-icon" src="images/hint.png" width="20" height="20" onclick="display_hint7()">
+                              <!-- <p class = "paragraph"> -->
+                              <span class="paragraph">
+                                <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                                <b>Step 3: </b>
+                                Check the Tutee’s understanding to see if the tutee has any misconceptions about the relationship between simple interest and compound interest.
+
+                              </span>
+                              <!-- display hints -->
+                              <font color="#990000">
+                                </font></p><p class="hint" id="hint7" hidden=""><font color="#990000">
+                                  Ask your tutee a further question to <font color="#c85c32"><b>correct a possible misunderstanding</b></font>: based on this case, and the calculation, what features he/she finds about the pace that simple interest and compound interest grow through time?
+                                </font></p><font color="#990000">
+                              </font>
+                            <p></p>
+                          </div>
+                          <div class="div">
+                            <p class="paragraph">
+                              <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                              <b>Step 4: </b>
+                              You could provide your tutee this resource and ask him/her to try with the  <font color="#c85c32"><b>interactive graph by changing the interest rates</b></font>. Then ask about your tutee’s opinion on this problem.
+                              <a href="https://demilii.github.io/TOL_project1/Comparison.html">https://demilii.github.io/TOL_project1/Comparison.html</a>
+                            </p>
+                          </div>
+                        </div>
+                        <!-- assessment session -->
+                        <div class="div">
+                          <h6>Assessment: </h6>
+                          <div class="div">
+                            <p>
+                              <img class="hint-icon" src="images/hint.png" width="20" height="20" onclick="display_hint8()">
+                              <span class="paragraph">
+                                <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                                <b>Step 1: </b>
+                                According to what we learned, it’s time to do some hands-on exercises to reinforce the tutee’s learning.
+                              </span>
+                              <!-- display hints -->
+                              <font color="#990000">
+                                </font></p><p class="hint" id="hint8"><font color="#990000">
+                                  Now it’s time to give the Tutee some exercise to practice the concepts we learned. Here’s a resource you could use to reinforce the Tutee’s learning <a href="https://demilii.github.io/TOL_project1/page7.html">https://demilii.github.io/TOL_project1/page7.html</a>.
+                                  You could provide the questions one-by-one to help the tutee to explain the rationale of the solution.
+                                </font></p><font color="#990000">
+                              </font>
+                            <p></p>
+                          </div>
+                          <p class="paragraph">
+                            <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                            <b>Step 2: </b>
+                            You’d better ask the tutee how to solve this problem first. Make sure the tutee explains the rationale of the solution in detail.
+                          </p>
+                          <p class="paragraph">
+                            <input name="myCheckBox" id="myCheckBox" type="checkbox">
+                            <b>Step 3: </b>
+                            Check tutee’s answer. For those steps your tutee missed, you could provide more explanation. For those steps your tutee got it correct, you could ask your tutee to explain his/her thoughts to you.
+                          </p>
+                        </div>
+
+                      </div>
+                    </div>
+
+        <!-- tutee -->
+        <div id="tutee" hidden>
+          <div class="container">
+            <div class="light">
+                  <div class="question">
+                    <ul>
+                      <h5>Which question do you need help with?</h5>
+                      <li>
+                        <input id="radio1" class="radio" type="radio" name="radio">
+                        <label for="radio1">Phineas borrows $250 from Candance in January. Candace sets a compound interest rate of 20% (0.2). Phineas pays Candace back 2 months later. How much money did Phineas pay Candace?</label>
+                      </li>
+                      <li>
+                        <input id="radio2" class="radio" type="radio" name="radio" checked="true">
+                        <label for="radio2">Option 2</label>
+                      </li>
+                      <li>
+                        <input id="radio3" class="radio" type="radio" name="radio">
+                        <label for="radio3">Some other question</label>
+                      </li>
+                    </ul>
+                  </div>
+              <div class="help">
+                <ul>
+                  <h5>How can I help you with this question?</h5>
+                  <li>
+                    <input id="checkbox1" class="checkbox" type="checkbox">
+                    <label for="checkbox1"> I do not know how to start.</label>
+                  </li>
+                  <li>
+                    <input id="checkbox2" class="checkbox" type="checkbox" checked="true">
+                    <label> I need to refer to the formula </label>
+                  </li>
+                  <li>
+                    <input id="checkbox3" class="checkbox" type="checkbox">
+                    <label for="checkbox3">I don't understand the values in the question.</label>
+                  </li>
+                  <li>
+                    <input id="checkbox4" class="checkbox" type="checkbox">
+                    <label for="checkbox4">My answer doesn't make sense.</label>
+                  </li>
+                  <li>
+                    <input id="checkbox4" class="checkbox" type="checkbox">
+                    <label for="checkbox4">I need help with something else.</label>
+                  </li>
+                </ul>
+              </div>
+                          
+                      
+            </div>
+          </div>
+          <div class="container">
+            <button id="btn">
+                <p id="btnText">I'm ready to begin!</p>
+                <div class="check-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                        <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+                </div>
+            </button>
+        </div>
+          </div>
+
+        
+      </div>
+
+      <!-- Messages container -->
+      <div id="messages-card" class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--6-col-desktop">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <div id="messages">
+          </div>
+          <form id="message-form" action="#">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <input class="mdl-textfield__input" type="text" id="message" autocomplete="off">
+              <label class="mdl-textfield__label" for="message">Message...</label>
+            </div>
+            <button id="submit" disabled type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+              Send
+            </button>
+          </form>
+          <form id="image-form" action="#">
+            <input id="mediaCapture" type="file" accept="image/*" capture="camera">
+            <button id="submitImage" title="Add an image" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--amber-400 mdl-color-text--white">
+              <i class="material-icons">image</i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+      </div>
+      
+      
+    </div>
+  </main>
+</div>
+
+<!-- This script is created by webpack -->
+<script src="scripts/main.js"></script>
+</body>
+</html>
