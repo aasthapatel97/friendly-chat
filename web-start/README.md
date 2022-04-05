@@ -37,6 +37,8 @@ Requirements:
 - When you open the app, there is a standard message for navigation.
 
 
-Backend:
-- Test the correctness of the database
-- 
+Today's goals:
+- 1. Tutee selects "where I need help" ---> Tutor interface gets updated with it
+- 2. Add side panel (level of hint) - in hint category
+- 3. Copy to clipboard
+- 4. Fix the image thing (OPTIONAL)

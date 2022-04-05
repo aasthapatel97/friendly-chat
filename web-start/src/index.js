@@ -242,7 +242,21 @@ function onFormSubmit(e) {
         selectedSize = radioButton.value;
         break;
     }
+  }
 }
+
+function displayRole(e) {
+  if (roleElement.value == "tutee") {
+    $('#tutee').show();
+    $('#tutor').hide();
+  } else if (roleElement.value == "tutor") {
+    $('#tutee').hide();
+    $('#tutor').show();
+  } else if (roleElement.value == "select_role") {
+    $('#tutee').hide();
+    $('#tutor').hide();
+  }
+  
 }
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
@@ -432,12 +446,27 @@ var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 var formButtonElement = document.getElementById('btn');
+var roleElement = document.getElementById('role-selector');
+var getClipboardText = document.getElementById('text_box');
+var getInputButton = document.getElementById('clip_board');
+var getParagraph = document.getElementById('text_para');
+var getParaButton = document.getElementById('clip_para');
+
+
+
 
 // Saves message on form submit.
 messageFormElement.addEventListener('submit', onMessageFormSubmit);
 signOutButtonElement.addEventListener('click', signOutUser);
 signInButtonElement.addEventListener('click', signIn);
 formButtonElement.addEventListener('click', onFormSubmit);
+
+// dropdown menu
+roleElement.addEventListener('change', displayRole);
+
+// clipboard
+getInputButton.addEventListener('click', copyToClipboardFromInput);
+getParaButton.addEventListener('click', copyToClipboardFromParagraph);
 
 // Toggle for the button.
 messageInputElement.addEventListener('keyup', toggleButton);
@@ -462,11 +491,14 @@ loadMessages();
 
 // Copy to clipboard for hints on chat
 
-function copyToClipboard(element) {
-  var $temp = $("<input>");
-  $("body").append($temp);
-  $temp.val($(element).text()).select();
-  document.execCommand("copy");
-  $temp.remove();
+function copyToClipboardFromInput() {
+  getClipboardText.select();
+  navigator.clipboard.writeText(getClipboardText.value);
 }
 
+function copyToClipboardFromParagraph() {
+  navigator.clipboard.writeText(getParagraph.innerText);
+}
+
+$('#tutee').hide();
+$('#tutor').hide();
