@@ -16,8 +16,19 @@ To rebuild the web-app
 ```
 npm run build
 ```
+OR
+
+Run the following command line script:
+```
+./build.sh
+```
+DEPLOYMENT:
+```
+firebase deploy --except functions
+```
 
 This should start the app at http://localhost:5000
+
 
 
 

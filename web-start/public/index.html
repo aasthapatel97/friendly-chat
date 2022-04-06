@@ -84,7 +84,7 @@
     <div id="messages-card-container" class="mdl-cell mdl-cell--12-col mdl-grid">
       <!-- Scripts and Hints-->
       <div id="script-hints" class="mdl-cell mdl-cell--6-col">
-        <h5>Scripts &amp; Hints</h5>
+        <h5> WORKSPACE </h5>
         <!-- select roles: tutor or tutee -->
         <div id="select-role">
           <p>First select your role as:
@@ -101,80 +101,147 @@
           <p>
             <b>Question:</b> Phineas borrows $250 from Candance in January. Candace sets a compound interest rate of 20% (0.2). Phineas pays Candace back 2 months later. How much money did Phineas pay Candace? </p>
             <p>
+          <p class="text_para"> <b>Formula:</b> A = P(1 + r)^t </p>
+                <p><b> Common Misconceptions for this question:</b>
+                <li>Student does not convert the percentage rate to a decimal before solving.</li>
+                <li>Order of operations</li> </p>
             <b>Tutee Concern:</b> <i>I need help with something else.</i>
           </p> 
           <p><i> <b>Click</b> to access Tutee's Response History </i></p>
-    
-          <!--Hint Category-->
-          <h5>Hint Categories</h5>
-          <div class="warpper">
-  
-            <input class="label" id="one" name="group" type="radio" checked hidden>
-            <input class="label" id="two" name="group" type="radio" hidden>
-            <input class="label" id="three" name="group" type="radio" hidden>
-  
-            <div class="tabs">
-              <label class="tab" id="one-tab" for="one">Make Connections</label>
-              <label class="tab" id="two-tab" for="two">Strategize</label>
-              <label class="tab" id="three-tab" for="three">Motivate</label>
+          
+          <h5>>>Begin the session</h5> 
+          <p>
+          - Greet the tutee and make them comfortable! <br>
+          <p class="text_para">    <i>How can I help you with this question?</i></p> <br>
+           - Use the tutee's concern type to initate the conversation
+        </p>
+          
+          
+          <!--Hint Category (Warpper)-->
+          <h5>>>Choose hint category</h5>
+
+          <div class="tabs">
+            <div class="tab">
+              <input type="radio" id="tab-1" name="tab-group-1" checked hidden>
+              <label for="tab-1">Make Connections</label>
+              <div class="content">
+                <div class="sub-tabs">
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-1a" name="sub-tab-group-1" checked hidden>
+                    <label for="sub-tab-1a">Level 1</label>
+                    <div class="content">
+                      <div class ="hint-contentpanel-level1" id="one-tab1" >
+                        <p> <b>Ask the students to:</b></p>
+                        <p class="text_para"> look back at step 1 to identify Principle Amount </p> 
+                        <p class="text_para"> look back at step 2 to identify Rate of interest </p>
+                        <p class="text_para"> look back at step 3 to identify Time </p>
+                        <p class="text_para"> look back at step 4 to recall the Compound Interest Formula </p>
+            
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-2a" name="sub-tab-group-1" hidden>
+                    <label for="sub-tab-2a">Level 2</label>
+                    <div class="content">
+                      <p>Stuff for Level-2</p>
+                      
+                    </div>
+                  </div>
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-3a" name="sub-tab-group-1" hidden>
+                    <label for="sub-tab-3a">Level 3</label>
+                    <div class="content">
+                      <p>Stuff for Level-3</p>
+                      
+                    </div>
+                  </div>
+                </div> 
+              </div>
             </div>
-
-            <div class="panels">
-              <div class="panel" id="one-panel">
-                <input class="label" id="one" name="group" type="radio" checked hidden>
-                <input class="label" id="two" name="group" type="radio" hidden>
-                <input class="label" id="three" name="group" type="radio" hidden>
-      
-                <div class="tabs">
-                  <label class="tab" id="one-tab" for="one">Level 1</label>
-                  <label class="tab" id="two-tab" for="two">Level 2</label>
-                  <label class="tab" id="three-tab" for="three">Level 3</label>
-                </div>
-                <p id="text_para"> Ask the student to look back at step 1 to help with identifying P</p>
-                <button class="clipboard" id="clip_para"> Copy text </button>
+            <div class="tab">
+              <input type="radio" id="tab-2" name="tab-group-1" hidden>
+              <label for="tab-2">Strategize</label>
+              <div class="content">
+                <div class="sub-tabs">
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-1b" name="sub-tab-group-1" checked hidden>
+                    <label for="sub-tab-1b">Level 1</label>
+                    <div class="content">
+                      <p>Stuff for Level-1</p>
+                    </div>
+                  </div>
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-2b" name="sub-tab-group-1" hidden>
+                    <label for="sub-tab-2b">Level 2</label>
+                    <div class="content">
+                      <p>Stuff for Level-2</p>
+                      
+                    </div>
+                  </div>
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-3b" name="sub-tab-group-1" hidden>
+                    <label for="sub-tab-3b">Level 3</label>
+                    <div class="content">
+                      <p>Stuff for Level-3</p>
+                      
+                    </div>
+                  </div>
+                </div> 
               </div>
-              <div class="panel" id="two-panel">
-                <input class="label" id="one" name="group" type="radio" checked hidden>
-                <input class="label" id="two" name="group" type="radio" hidden>
-                <input class="label" id="three" name="group" type="radio" hidden>
-      
-                <div class="tabs">
-                  <label class="tab" id="one-tab" for="one">Level 1</label>
-                  <label class="tab" id="two-tab" for="two">Level 2</label>
-                  <label class="tab" id="three-tab" for="three">Level 3</label>
-                </div>
-                <div class="panel-title">Add Title</div>
-                <p>Add content</p>
+            </div>
+            <div class="tab">
+              <input type="radio" id="tab-3" name="tab-group-1" hidden>
+              <label for="tab-3">Motivate</label>
+              <div class="content">
+                <div class="sub-tabs">
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-1c" name="sub-tab-group-1" checked hidden>
+                    <label for="sub-tab-1c">Level 1</label>
+                    <div class="content">
+                      <p>Stuff for Level-1</p>
+                    </div>
+                  </div>
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-2c" name="sub-tab-group-1"hidden>
+                    <label for="sub-tab-2c">Level 2</label>
+                    <div class="content">
+                      <p>Stuff for Level-2</p>
+                      
+                    </div>
+                  </div>
+                  <div class="sub-tab">
+                    <input type="radio" id="sub-tab-3c" name="sub-tab-group-1" hidden>
+                    <label for="sub-tab-3c">Level 3</label>
+                    <div class="content">
+                      <p>Stuff for Level-3</p>
+                      
+                    </div>
+                  </div>
+                </div> 
               </div>
-
-              <div class="panel" id="three-panel">
-                <input class="label" id="one" name="group" type="radio" checked hidden>
-                <input class="label" id="two" name="group" type="radio" hidden>
-                <input class="label" id="three" name="group" type="radio" hidden>
-      
-                <div class="tabs">
-                  <label class="tab" id="one-tab" for="one">Level 1</label>
-                  <label class="tab" id="two-tab" for="two">Level 2</label>
-                  <label class="tab" id="three-tab" for="three">Level 3</label>
-                </div>
-                <div class="panel-title">Add content</div>
-                <p>Add content</p>
-              </div>
-
             </div>
           </div>
 
-          <input class="textbox" id="text_box" value="Write your message"> </input>
+          <div class="warpper2">
+            
+          <input class="textbox" id="text_box" value="Draft your message"> </input>
           <button class="clipboard" id="clip_board"> Copy text </button>
+
+          </div>
+
         </div>
 
         <!-- tutee -->
         <div id="tutee">
+          <p>
+            <b>Question:</b> Phineas borrows $250 from Candance in January. Candace sets a compound interest rate of 20% (0.2). Phineas pays Candace back 2 months later. How much money did Phineas pay Candace? </p>
+            <p>
           <div class="container">
             <div class="light">
               <div class="help">
                 <ul>
-                  <h5>How can I help you with this question?</h5>
+                  <h6>How can I help you with this question?</h6>
                   <li>
                     <input id="checkbox1" class="checkbox" type="checkbox">
                     <label for="checkbox1"> I do not know how to start.</label>
@@ -197,19 +264,37 @@
                   </li>
                 </ul>
               </div>
+
+              <div class="container">
+                <button id="btn">
+                    <p id="btnText">Submit</p>
+                    <div class="check-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                            <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                        </svg>
+                    </div>
+                </button>
+              </div>
+
             </div>
+            <br>
+          
+            Learning new things can be challenging, your tutor is here to help you:
+              <li>Feel free to ask questions at any time</li>
+              <li>If you need to take a break or need time alone to think things through, just let your tutor know</li>
+              <li>Use the textbox space below to draft your messages and click on copy to automatically copy it.</li>
+              
+              
+            <div class="warpper2">
+            
+              <input class="textbox" id="text_box" value="Use this space for drafting your message for the tutor"> </input>
+              <br>
+              <button class="clipboard" id="clip_board"> Copy text </button>
+    
+              </div>
           </div>
 
-          <div class="container">
-            <button id="btn">
-                <p id="btnText">I'm ready to begin!</p>
-                <div class="check-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-                        <path fill="transparent" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
-                    </svg>
-                </div>
-            </button>
-          </div> <!--End of container-->
+           <!--End of container-->
         </div> <!-- End of tuttee-->
       </div> <!-- End of scripts and hints-->
 

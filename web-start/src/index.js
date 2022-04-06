@@ -22,6 +22,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  parseActionCodeURL,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -432,6 +433,32 @@ function toggleButton() {
   }
 }
 
+// intialize tutor app's default state
+function init() {
+  $('#tutee').hide();
+  $('#tutor').hide();
+
+  // Initialize clipboard for paragraphs
+  for (let i = 0; i < getParagraph.length; i++) {
+    const para = getParagraph[i];
+    para.addEventListener('click', function() {
+      navigator.clipboard.writeText(para.innerText);
+       if (para.style.color === "rgb(0, 0, 255)") {
+         para.style.color = '#000000';
+       } else {
+         para.style.color = '#0000FF';
+       }
+    });
+  }
+
+}
+
+// Copy to clipboard for hints on chat
+function copyToClipboardFromInput() {
+  getClipboardText.select();
+  navigator.clipboard.writeText(getClipboardText.value);
+}
+
 // Shortcuts to DOM Elements.
 var messageListElement = document.getElementById('messages');
 var messageFormElement = document.getElementById('message-form');
@@ -449,11 +476,7 @@ var formButtonElement = document.getElementById('btn');
 var roleElement = document.getElementById('role-selector');
 var getClipboardText = document.getElementById('text_box');
 var getInputButton = document.getElementById('clip_board');
-var getParagraph = document.getElementById('text_para');
-var getParaButton = document.getElementById('clip_para');
-
-
-
+var getParagraph = document.getElementsByClassName('text_para');
 
 // Saves message on form submit.
 messageFormElement.addEventListener('submit', onMessageFormSubmit);
@@ -466,7 +489,6 @@ roleElement.addEventListener('change', displayRole);
 
 // clipboard
 getInputButton.addEventListener('click', copyToClipboardFromInput);
-getParaButton.addEventListener('click', copyToClipboardFromParagraph);
 
 // Toggle for the button.
 messageInputElement.addEventListener('keyup', toggleButton);
@@ -488,17 +510,4 @@ getPerformance();
 
 initFirebaseAuth();
 loadMessages();
-
-// Copy to clipboard for hints on chat
-
-function copyToClipboardFromInput() {
-  getClipboardText.select();
-  navigator.clipboard.writeText(getClipboardText.value);
-}
-
-function copyToClipboardFromParagraph() {
-  navigator.clipboard.writeText(getParagraph.innerText);
-}
-
-$('#tutee').hide();
-$('#tutor').hide();
+init();
